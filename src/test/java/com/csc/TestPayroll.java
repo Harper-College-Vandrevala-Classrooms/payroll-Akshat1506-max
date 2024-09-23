@@ -1,11 +1,10 @@
 package com.csc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
 public class TestPayroll {
-
-    Payroll payroll;
 
     @Test
     public void testGrossPayRegularHours() {
@@ -28,15 +27,32 @@ public class TestPayroll {
     }
 
     @Test
-    public void testDeductions() {
-        double grossPay = 754.91;
-        assertEquals(213.73, Payroll.calculateDeductions(grossPay, 2), 0.01);  // Updated expected value
+    public void testLifeInsuranceCostSinglePlan() {
+        assertEquals(5.00, Payroll.getLifeInsuranceCost(2), 0.01);
     }
 
     @Test
-    public void testNetPay() {
+    public void testLifeInsuranceCostMarriedPlan() {
+        assertEquals(10.00, Payroll.getLifeInsuranceCost(3), 0.01);
+    }
+
+    @Test
+    public void testLifeInsuranceCostMarriedWithChildrenPlan() {
+        assertEquals(15.00, Payroll.getLifeInsuranceCost(4), 0.01);
+    }
+
+    @Test
+    public void testDeductionsWithLifeInsurance() {
         double grossPay = 754.91;
-        double deductions = 213.73;
-        assertEquals(541.18, Payroll.calculateNetPay(grossPay, deductions), 0.01);
+        int dependents = 2;
+        int lifeInsurancePlan = 2; // Single Plan
+        assertEquals(218.73, Payroll.calculateDeductions(grossPay, dependents, lifeInsurancePlan), 0.01);  // Updated expected value
+    }
+
+    @Test
+    public void testNetPayWithLifeInsurance() {
+        double grossPay = 754.91;
+        double deductions = 218.73;
+        assertEquals(536.18, Payroll.calculateNetPay(grossPay, deductions), 0.01);
     }
 }
